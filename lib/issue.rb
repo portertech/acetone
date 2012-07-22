@@ -1,5 +1,3 @@
-require "mongo"
-require "uri"
 require File.join(File.dirname(__FILE__), "mongohq")
 
 module Acetone

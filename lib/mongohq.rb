@@ -1,3 +1,6 @@
+require "mongo"
+require "uri"
+
 module Acetone
   class MongoHQ
     def initialize

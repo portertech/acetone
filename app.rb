@@ -1,4 +1,5 @@
 require "sinatra"
+require "json"
 require File.join(File.dirname(__FILE__), "lib", "issue")
 
 get "/" do
@@ -8,5 +9,5 @@ end
 get "/latest" do
   content_type "application/json"
   latest = Acetone::Issue.new.latest.reject {|key, value| key == "_id" }
-  latest.to_json
+  JSON.generate(latest)
 end
