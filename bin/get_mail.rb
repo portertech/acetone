@@ -1,6 +1,9 @@
 #!/usr/bin/env ruby
 
+cwd = File.expand_path(File.dirname(__FILE__))
+
 require "net/pop"
+require File.join(cwd, "..", "lib", "issue")
 
 server = ENV["ACETONE_POP_SERVER"]
 port   = ENV["ACETONE_POP_PORT"] || 995
@@ -10,7 +13,7 @@ password = ENV["ACETONE_POP_PASSWORD"]
 
 newsletter_email = ENV["ACETONE_POP_NEWSLETTER_EMAIL"]
 
-cacert = File.join(File.expand_path("..", Dir.pwd), "ssl", "cacert.pem")
+cacert = File.join(cwd, "..", "ssl", "cacert.pem")
 
 Net::POP3.enable_ssl(OpenSSL::SSL::VERIFY_PEER, cacert)
 
@@ -32,9 +35,11 @@ Net::POP3.start(server, port, username, password) do |pop3|
             news += line.chomp.chomp("=")
           end
         end
-        urls = news.scan(/https?:\/\/[^\s<]*\w\/?/).uniq
-        puts urls.inspect
+        issue = Acetone::Issue.new
+        issue.links = news.scan(/https?:\/\/[^\s<]*\w\/?/).uniq
+        issue.save
       end
     end
   end
+  puts Acetone::Issue.new.latest
 end
