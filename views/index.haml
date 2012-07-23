@@ -1,0 +1,36 @@
+!!! Strict
+%html
+  %head
+    %title Acetone - The DevOps Weekly Instapaper subscription service.
+    %link(type="text/css" rel="stylesheet" href="css/bootstrap.css")
+    %link(type="text/css" rel="stylesheet" href="css/styled.css")
+    %script(type="text/javascript" src="js/bootstrap.js")
+  %body
+    %div(class="container")
+      %header(class="hero-unit")
+        %h1 Acetone
+        %p The DevOps Weekly Instapaper subscription service.
+        %p Adds AWESOME news links to your Instapaper queue.
+        %br
+        %form(class="well" method="post" action="/user")
+          - if error
+            %div(class="alert alert-error")
+              = error
+          - if success
+            %div(class="alert alert-success")
+              = success
+          %label Username
+          %input(type="text" name="username" class="span3" placeholder="Instapaper Username")
+          %label Password (Yours may be blank)
+          %input(type="password" name="password" class="span3" placeholder="Instapaper Password")
+          %label(class="checkbox")
+            %input(type="checkbox" name="latest_issue") Receive the latest issue!
+          %br
+          %button(class="btn btn-primary")
+            Subscribe
+          %button(class="btn")
+            Clear
+      %div(id="push")
+    %footer(role="contentinfo")
+      %div(class="container")
+        Created by <a href="https://twitter.com/portertech">Sean Porter</a> | Code is available on <a href="https://github.com/portertech/acetone">GitHub</a>.
