@@ -2,7 +2,7 @@ require File.join(File.dirname(__FILE__), "mongohq")
 
 module Acetone
   class User < MongoHQ
-    attr_accessor :created, :user_id, :access_token, :last_issue
+    attr_accessor :_id, :created, :user_id, :access_token, :last_issue
 
     def initialize
       @created = Time.now.to_i
@@ -24,7 +24,11 @@ module Acetone
 
     def save!
       if valid?
-        mongohq.collection("users").insert(to_hash)
+        if @_id
+          mongohq.collection("users").update({"_id" => @_id}, to_hash)
+        else
+          mongohq.collection("users").insert(to_hash)
+        end
         true
       else
         false
@@ -36,7 +40,7 @@ module Acetone
     def all
       mongohq.collection("users").find.map do |document|
         user = User.new
-        %w[created user_id access_token last_issue].each do |attribute|
+        %w[_id created user_id access_token last_issue].each do |attribute|
           user.send("#{attribute}=".to_sym, document[attribute])
         end
         user
