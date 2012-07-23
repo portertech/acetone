@@ -1,4 +1,6 @@
-acetone
+Acetone
 =======
 
-Strip urls from DevOps weekly for instapaper'n
+Provides a DevOps Weekly Instapaper subscription service.
+
+(A WIP)
