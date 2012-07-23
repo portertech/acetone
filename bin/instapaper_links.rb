@@ -14,7 +14,7 @@ users = Acetone::Users.new
 instapaper = Acetone::Instapaper.new
 
 users.all.each do |user|
-  if user.valid? && user.last_issue < issue.created
+  if user.valid? && (user.last_issue || 0) < issue.created
     instapaper.use_access_token(user.oauth_token, user.oauth_token_secret)
     if instapaper.valid_credentials?
       issue.links.each do |link|

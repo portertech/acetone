@@ -2,7 +2,6 @@ require File.join(File.dirname(__FILE__), "mongohq")
 
 module Acetone
   USER_ATTRIBUTES = [
-    :_id,
     :created,
     :user_id,
     :oauth_token,
@@ -18,13 +17,7 @@ module Acetone
     end
 
     def to_hash
-      {
-        :created            => @created,
-        :user_id            => @user_id,
-        :oauth_token        => @oauth_token,
-        :oauth_token_secret => @oauth_token_secret,
-        :last_issue         => @last_issue
-      }
+      Hash[USER_ATTRIBUTES.map { |attribute| [attribute, send(attribute)] }]
     end
 
     def valid?
@@ -34,11 +27,7 @@ module Acetone
 
     def save!
       if valid?
-        if @_id
-          mongohq.collection("users").update({"_id" => @_id}, to_hash)
-        else
-          mongohq.collection("users").insert(to_hash)
-        end
+        mongohq.collection("users").update({"user_id" => @user_id}, to_hash, :upsert => true)
         true
       else
         false
