@@ -36,7 +36,7 @@ Net::POP3.start(server, port, username, password) do |pop3|
       end
       issue = Acetone::Issue.new
       issue.links = news.scan(/https?:\/\/[^\s<]*\w\/?/).uniq
-      issue.save
+      issue.save!
     end
   end
 end

@@ -7,28 +7,32 @@ module Acetone
     def initialize
       @created = Time.now.to_i
       @links   = []
-      super
+    end
+
+    def to_hash
+      {
+        :created => @created,
+        :links   => @links
+      }
+    end
+
+    def latest!
+      document = mongohq.collection("issues").find.sort([:created, :desc]).first
+      @created = document["created"]
+      @links   = document["links"]
     end
 
     def valid?
       @created.is_a?(Integer) && @links.is_a?(Array) && !@links.empty?
     end
 
-    def save
+    def save!
       if valid?
-        issue = {
-          :created => @created,
-          :links   => @links
-        }
-        @mongohq.collection("issues").insert(issue)
+        mongohq.collection("issues").insert(to_hash)
         true
       else
         false
       end
-    end
-
-    def latest
-      @mongohq.collection("issues").find.sort([:created, :desc]).first
     end
   end
 end

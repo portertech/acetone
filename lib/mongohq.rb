@@ -3,11 +3,7 @@ require "uri"
 
 module Acetone
   class MongoHQ
-    def initialize
-      mongohq_connection
-    end
-
-    def mongohq_connection
+    def mongohq
       return @mongohq if @mongohq
       db       = URI.parse(ENV["MONGOHQ_URL"])
       db_name  = db.path.gsub(/^\//, "")
