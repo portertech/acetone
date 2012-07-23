@@ -1,8 +1,17 @@
 require File.join(File.dirname(__FILE__), "mongohq")
 
 module Acetone
+  USER_ATTRIBUTES = [
+    :_id,
+    :created,
+    :user_id,
+    :oauth_token,
+    :oauth_token_secret,
+    :last_issue
+  ]
+
   class User < MongoHQ
-    attr_accessor :_id, :created, :user_id, :access_token, :last_issue
+    attr_accessor *USER_ATTRIBUTES
 
     def initialize
       @created = Time.now.to_i
@@ -10,16 +19,17 @@ module Acetone
 
     def to_hash
       {
-        :created      => @created,
-        :user_id      => @user_id,
-        :access_token => @access_token,
-        :last_issue   => @last_issue
+        :created            => @created,
+        :user_id            => @user_id,
+        :oauth_token        => @oauth_token,
+        :oauth_token_secret => @oauth_token_secret,
+        :last_issue         => @last_issue
       }
     end
 
     def valid?
       @created.is_a?(Integer) && @user_id.is_a?(Integer) &&
-        @access_token.is_a?(String) && !@access_token.empty?
+        @oauth_token.is_a?(String) && @oauth_token_secret.is_a?(String)
     end
 
     def save!
@@ -40,8 +50,8 @@ module Acetone
     def all
       mongohq.collection("users").find.map do |document|
         user = User.new
-        %w[_id created user_id access_token last_issue].each do |attribute|
-          user.send("#{attribute}=".to_sym, document[attribute])
+        USER_ATTRIBUTES.each do |attribute|
+          user.send("#{attribute}=".to_sym, document[attribute.to_s])
         end
         user
       end
