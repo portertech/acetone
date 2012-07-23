@@ -22,7 +22,6 @@ get "/latest" do
 end
 
 post "/user" do
-  request.body.rewind
   valid   = true
   success = false
   error   = false
