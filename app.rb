@@ -55,7 +55,7 @@ post "/user" do
           user = Acetone::User.new
           if user.load(credentials[:user_id])
             if user.delete!
-              success = "Success! You unsubscribed, sorry to see your go."
+              success = "Success! You unsubscribed, sorry to see you go."
             else
               error = "Error! Please try again later."
             end
