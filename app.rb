@@ -17,7 +17,7 @@ end
 get "/latest" do
   content_type "application/json"
   issue = Acetone::Issue.new
-  issue.latest!
+  issue.latest
   JSON.generate(issue.to_hash)
 end
 
@@ -25,6 +25,9 @@ post "/user" do
   valid   = true
   success = false
   error   = false
+  unless params.has_key?("action") && ["subscribe", "unsubscribe"].include?(params[:action])
+    valid = false
+  end
   unless params.has_key?("username") && !params[:username].empty?
     valid = false
   end
@@ -32,19 +35,33 @@ post "/user" do
     instapaper = Acetone::Instapaper.new
     if instapaper.get_access_token(params[:username], params[:password])
       if credentials = instapaper.current_credentials
-        user = Acetone::User.new
-        user.user_id            = credentials[:user_id]
-        user.oauth_token        = credentials[:oauth_token]
-        user.oauth_token_secret = credentials[:oauth_token_secret]
-        unless params[:latest_issue]
-          issue = Acetone::Issue.new
-          issue.latest!
-          user.last_issue = issue.created
-        end
-        if user.save!
-          success = "Success! You are now subscribed!"
-        else
-          error = "Error! Please try again later."
+        case params[:action]
+        when "subscribe"
+          user = Acetone::User.new
+          user.user_id            = credentials[:user_id]
+          user.oauth_token        = credentials[:oauth_token]
+          user.oauth_token_secret = credentials[:oauth_token_secret]
+          unless params[:latest_issue]
+            issue = Acetone::Issue.new
+            issue.latest
+            user.last_issue = issue.created
+          end
+          if user.save!
+            success = "Success! You are now subscribed!"
+          else
+            error = "Error! Please try again later."
+          end
+        when "unsubscribe"
+          user = Acetone::User.new
+          if user.load(credentials[:user_id])
+            if user.delete!
+              success = "Success! You unsubscribed, sorry to see your go."
+            else
+              error = "Error! Please try again later."
+            end
+          else
+            error = "Error! Are you sure you have subscribed?"
+          end
         end
       else
         error = "Error! Invalid Instapaper credentials."

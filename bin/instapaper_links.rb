@@ -7,7 +7,7 @@ require File.join(cwd, "..", "lib", "user")
 require File.join(cwd, "..", "lib", "instapaper")
 
 issue = Acetone::Issue.new
-issue.latest!
+issue.latest
 
 users = Acetone::Users.new
 

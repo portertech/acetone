@@ -26,8 +26,7 @@ module Acetone
       begin
         token = ::Instapaper.access_token(username, password)
         use_access_token(token["oauth_token"], token["oauth_token_secret"])
-      rescue => error
-        puts error.to_s
+      rescue
         false
       end
     end
@@ -40,8 +39,7 @@ module Acetone
         else
           false
         end
-      rescue => error
-        puts error.to_s
+      rescue
         false
       end
     end

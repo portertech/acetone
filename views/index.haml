@@ -26,10 +26,10 @@
           %label(class="checkbox")
             %input(type="checkbox" name="latest_issue") Receive the latest issue!
           %br
-          %button(class="btn btn-primary")
+          %button(type="submit" name="action" value="subscribe" class="btn btn-primary")
             Subscribe
-          %button(class="btn")
-            Clear
+          %button(type="submit" name="action" value="unsubscribe" class="btn")
+            Unsubscribe
       %div(id="push")
     %footer(role="contentinfo")
       %div(class="container")

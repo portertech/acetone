@@ -16,7 +16,7 @@ module Acetone
       }
     end
 
-    def latest!
+    def latest
       document = mongohq.collection("issues").find_one(nil, :sort => [:created, :desc])
       @created = document["created"]
       @links   = document["links"]
