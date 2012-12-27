@@ -1,6 +1,8 @@
 require "sinatra"
 require "haml"
 require "json"
+require "uri"
+
 require File.join(File.dirname(__FILE__), "lib", "issue")
 require File.join(File.dirname(__FILE__), "lib", "user")
 require File.join(File.dirname(__FILE__), "lib", "instapaper")
@@ -75,4 +77,25 @@ post "/user" do
   session[:success] = success
   session[:error]   = error
   redirect back
+end
+
+post "/receiver" do
+  if params[:from] == ENV["ACETONE_NEWSLETTER_EMAIL"]
+    selection = false
+    news      = ""
+    params[:plain].each_line do |line|
+      case line
+      when /^News/
+        selection = true
+      when /^(Sponsors?|Events|Tools)/
+        break if selection
+      end
+      if selection
+        news += line
+      end
+    end
+    issue       = Acetone::Issue.new
+    issue.links = URI.extract(news)
+    issue.save!
+  end
 end
