@@ -1,3 +1,6 @@
 require "./app.rb"
 
-run Sinatra::Application
+run Rack::URLMap.new({
+  "/" => Public,
+  "/receiver" => Protected
+})
