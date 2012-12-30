@@ -87,7 +87,7 @@ class Protected < Sinatra::Base
   end
 
   post "/" do
-    if params[:from] == ENV["ACETONE_NEWSLETTER_EMAIL"]
+    if params[:subject].include?(ENV["ACETONE_NEWSLETTER_SUBJECT"])
       selection = false
       news      = ""
       params[:plain].each_line do |line|
