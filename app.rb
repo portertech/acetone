@@ -94,7 +94,7 @@ class Protected < Sinatra::Base
         case line
         when /^News/
           selection = true
-        when /^(Sponsors?|Events|Tools)/
+        when /^(Sponsors?|Events|Tools|Jobs|Devopsdays)/
           break if selection
         end
         if selection
