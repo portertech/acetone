@@ -19,7 +19,7 @@ GEM
       bson (~> 1.6.4)
     multi_json (1.0.4)
     multipart-post (1.1.5)
-    rack (1.4.1)
+    rack (1.6.12)
     rack-protection (1.2.0)
       rack
     rash (0.3.2)
